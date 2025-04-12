@@ -19,6 +19,22 @@ export const SingupComponent = ({setIsLogin}) => {
     const [Nationality, setNationality] = useState('')
     const [Dob, setDob] = useState('')
     const [Gender, setGender] = useState('')
+    const [error, setError] = useState("");
+
+    const handleDobChange = (e) => {
+        const inputDate = new Date(e.target.value);
+        const today = new Date();
+        const eighteenYearsAgo = new Date();
+        eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+    
+        setDob(e.target.value);
+    
+        if (inputDate > eighteenYearsAgo) {
+          setError("You must be at least 18 years old.");
+        } else {
+          setError("");
+        }
+      };
 
     const signupHandler = async function() {
         var emailfilter = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b$/i;
@@ -36,6 +52,18 @@ export const SingupComponent = ({setIsLogin}) => {
         else if (Nationality == '')  toast.error('Please enter your nationality')
         else if (Dob == '')  toast.error('Please enter your Date of Birth')
         else if (Gender == '')  toast.error('Please select the gender')
+
+
+        const inputDate = new Date(Dob);
+        const today = new Date();
+        const eighteenYearsAgo = new Date();
+        eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
+        setDob(Dob);
+        if (inputDate > eighteenYearsAgo) {
+          return toast.error('You must be at least 18 years old.')
+        }
+
+
         else {
             var data = {
                 'full_name' : Fullname,
@@ -138,7 +166,9 @@ export const SingupComponent = ({setIsLogin}) => {
                 <div className="row">
                     <div className="col-6">
                         <div className="form-group">
-                            <input type="date" id="dob" name="dob" onInput={(e)=>{setDob(e.target.value)}}  placeholder="Date of Birth" />
+                            <label>Date Of Birth</label>
+                            <input type="date" id="dob" name="dob" value={Dob} onInput={handleDobChange}  placeholder="Date of Birth" />
+                            {error && <p style={{ color: "red" }}>{error}</p>}
                         </div>
                     </div>
                     <div className="col-6">
